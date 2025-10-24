@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Architecture - Hyperledger Fabric Medical Blockchain</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .code { font-family: 'JetBrains Mono', monospace; }
+        .text-gradient { background: linear-gradient(135deg, #1e3a8a, #0d9488); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: linear-gradient(135deg, #1e3a8a, #0d9488); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(30, 58, 138, 0.3); }
+        .architecture-layer { transition: all 0.3s ease; border-left: 4px solid transparent; }
+        .architecture-layer:hover { border-left-color: #0d9488; background: linear-gradient(135deg, #f8fafc, #e2e8f0); }
+        .node-status { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .reveal { opacity: 0; transform: translateY(30px); }
+        .reveal.active { opacity: 1; transform: translateY(0); transition: all 0.6s ease; }
+        .network-diagram { min-height: 500px; }
+        .transaction-flow { stroke-dasharray: 5,5; animation: dash 1s linear infinite; }
+        @keyframes dash { to { stroke-dashoffset: -10; } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <img src="resources/tech-titans-logo.png" alt="Tech Titans Logo" class="h-10 w-10">
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-900">Tech Titans</h1>
+                        <p class="text-xs text-gray-600">Network Architecture</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
+                    <a href="architecture.html" class="text-blue-600 font-medium">Architecture</a>
+                    <a href="research.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Research</a>
+                    <a href="api-test.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Command Center</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="pt-24 pb-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center reveal">
+                <h1 class="text-4xl md:text-5xl font-bold text-gradient mb-6">Network Architecture</h1>
+                <p class="text-xl text-gray-600 max-w-4xl mx-auto">
+                    Explore the Hyperledger Fabric network topology, node configurations, and transaction flow 
+                    that powers our secure medical data storage solution.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Network Status -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 reveal">
+                <h2 class="text-3xl font-bold mb-8">Live Network Status</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-4 h-4 bg-green-500 rounded-full node-status"></div>
+                                <div>
+                                    <h3 class="font-bold">org1hospital1</h3>
+                                    <p class="text-sm text-gray-600">Peer Node - AWS: ap-southeast-2</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-green-600 font-medium">Active</p>
+                                <p class="text-xs text-gray-500">Node ID: a0w8nsa04l</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-4 h-4 bg-green-500 rounded-full node-status"></div>
+                                <div>
+                                    <h3 class="font-bold">ordererNode</h3>
+                                    <p class="text-sm text-gray-600">Orderer Node - AWS: ap-southeast-2</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-green-600 font-medium">Active</p>
+                                <p class="text-xs text-gray-500">Node ID: a0oiss3ozm</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold">Network Statistics</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Total Blocks:</span>
+                                <span class="font-bold">1,247</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Transactions:</span>
+                                <span class="font-bold">3,891</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Chaincode Version:</span>
+                                <span class="font-bold">health_record_storage v1.0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Channel:</span>
+                                <span class="font-bold">default-channel</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Network Diagram -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 reveal">
+                <h2 class="text-3xl font-bold mb-8">Interactive Network Topology</h2>
+                <p class="text-gray-600 mb-8">Click on nodes to explore their connections and simulate transaction flow through the network.</p>
+                
+                <div id="network-diagram" class="network-diagram bg-gray-50 rounded-lg mb-6"></div>
+                
+                <div class="flex justify-center space-x-4">
+                    <button id="simulate-transaction" class="btn-primary px-6 py-3 text-white font-semibold rounded-lg">
+                        Simulate Transaction
+                    </button>
+                    <button id="reset-diagram" class="bg-gray-600 hover:bg-gray-700 px-6 py-3 text-white font-semibold rounded-lg transition-colors">
+                        Reset Diagram
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hyperledger Fabric Architecture -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 reveal">
+                <h2 class="text-3xl font-bold mb-8">Hyperledger Fabric Architecture</h2>
+                <p class="text-gray-600 mb-8">Explore the layered architecture that makes Hyperledger Fabric ideal for enterprise healthcare applications.</p>
+                
+                <div class="space-y-4">
+                    <div class="architecture-layer p-6 rounded-lg cursor-pointer" data-layer="application">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Application Layer</h3>
+                                <p class="text-gray-600">Client applications, user interfaces, and API endpoints</p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="architecture-layer p-6 rounded-lg cursor-pointer" data-layer="smart-contract">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Smart Contract Layer</h3>
+                                <p class="text-gray-600">Chaincode containing business logic for medical record management</p>
+                            </div>
+                            <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="architecture-layer p-6 rounded-lg cursor-pointer" data-layer="transaction">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Transaction Layer</h3>
+                                <p class="text-gray-600">Endorsement, ordering, and validation of medical data transactions</p>
+                            </div>
+                            <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="architecture-layer p-6 rounded-lg cursor-pointer" data-layer="ledger">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Distributed Ledger</h3>
+                                <p class="text-gray-600">Immutable blockchain storage for medical records and audit trails</p>
+                            </div>
+                            <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="architecture-layer p-6 rounded-lg cursor-pointer" data-layer="network">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Network Layer</h3>
+                                <p class="text-gray-600">Peer nodes, orderers, and communication protocols</p>
+                            </div>
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="architecture-details" class="mt-8 p-6 bg-gray-50 rounded-lg hidden">
+                    <h3 class="text-xl font-bold mb-4" id="layer-title">Layer Details</h3>
+                    <p id="layer-description" class="text-gray-600"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Transaction Flow -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 reveal">
+                <h2 class="text-3xl font-bold mb-8">Transaction Lifecycle</h2>
+                <p class="text-gray-600 mb-8">Understand how medical data transactions flow through the Hyperledger Fabric network.</p>
+                
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl font-bold text-blue-600">1</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Proposal</h3>
+                        <p class="text-sm text-gray-600">Client sends transaction proposal to endorsing peers</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl font-bold text-teal-600">2</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Endorsement</h3>
+                        <p class="text-sm text-gray-600">Peers simulate transaction and return endorsement</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl font-bold text-emerald-600">3</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Ordering</h3>
+                        <p class="text-sm text-gray-600">Orderer creates block and delivers to channels</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl font-bold text-amber-600">4</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Validation</h3>
+                        <p class="text-sm text-gray-600">Peers validate and commit transaction to ledger</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 p-6 bg-gray-50 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">Transaction Flow Visualization</h3>
+                    <svg width="100%" height="200" viewBox="0 0 800 200" class="border border-gray-200 rounded-lg bg-white">
+                        <!-- Client -->
+                        <rect x="50" y="80" width="80" height="40" rx="5" fill="#1e3a8a" class="cursor-pointer" data-node="client"/>
+                        <text x="90" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Client</text>
+                        
+                        <!-- Peer Nodes -->
+                        <rect x="250" y="50" width="80" height="40" rx="5" fill="#0d9488" class="cursor-pointer" data-node="peer1"/>
+                        <text x="290" y="75" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Peer 1</text>
+                        
+                        <rect x="250" y="110" width="80" height="40" rx="5" fill="#0d9488" class="cursor-pointer" data-node="peer2"/>
+                        <text x="290" y="135" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Peer 2</text>
+                        
+                        <!-- Orderer -->
+                        <rect x="450" y="80" width="80" height="40" rx="5" fill="#f59e0b" class="cursor-pointer" data-node="orderer"/>
+                        <text x="490" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Orderer</text>
+                        
+                        <!-- Ledger -->
+                        <rect x="650" y="80" width="80" height="40" rx="5" fill="#10b981" class="cursor-pointer" data-node="ledger"/>
+                        <text x="690" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Ledger</text>
+                        
+                        <!-- Arrows -->
+                        <line x1="130" y1="100" x2="250" y2="70" stroke="#1e3a8a" stroke-width="2" marker-end="url(#arrowhead)" class="transaction-flow"/>
+                        <line x1="130" y1="100" x2="250" y2="130" stroke="#1e3a8a" stroke-width="2" marker-end="url(#arrowhead)" class="transaction-flow"/>
+                        <line x1="330" y1="70" x2="450" y2="100" stroke="#0d9488" stroke-width="2" marker-end="url(#arrowhead)" class="transaction-flow"/>
+                        <line x1="330" y1="130" x2="450" y2="100" stroke="#0d9488" stroke-width="2" marker-end="url(#arrowhead)" class="transaction-flow"/>
+                        <line x1="530" y1="100" x2="650" y2="100" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)" class="transaction-flow"/>
+                        
+                        <!-- Arrow marker -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#1e3a8a"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Specifications -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 reveal">
+                <h2 class="text-3xl font-bold mb-8">Technical Specifications</h2>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Node Configuration</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Node Size:</span>
+                                <span class="font-bold">Small</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Region:</span>
+                                <span class="font-bold">AWS: ap-southeast-2</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Owner:</span>
+                                <span class="font-bold">Undergraduate Student</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Creation Date:</span>
+                                <span class="font-bold">10/15/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Blockchain Configuration</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Consensus:</span>
+                                <span class="font-bold">Raft</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Channel:</span>
+                                <span class="font-bold">default-channel</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Chaincode:</span>
+                                <span class="font-bold">health_record_storage</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Version:</span>
+                                <span class="font-bold">v1.0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Security Settings</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">TLS Enabled:</span>
+                                <span class="font-bold text-green-600">Yes</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Client Auth:</span>
+                                <span class="font-bold text-green-600">Required</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Data Encryption:</span>
+                                <span class="font-bold text-green-600">AES-256</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Access Control:</span>
+                                <span class="font-bold">Role-based</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-3 mb-6">
+                    <img src="resources/tech-titans-logo.png" alt="Tech Titans Logo" class="h-12 w-12 opacity-80">
+                    <div>
+                        <h3 class="text-xl font-bold">Tech Titans Group 21</h3>
+                        <p class="text-gray-400 text-sm">Hyperledger Fabric Medical Blockchain Research</p>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800 pt-6">
+                    <p class="text-gray-400">
+                        © 2025 Tech Titans Group 21. Department of Information and Communication Technology, 
+                        Faculty of Technology, Rajarata University of Sri Lanka.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Architecture page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeNetworkDiagram();
+            initializeArchitectureLayers();
+            initializeScrollEffects();
+        });
+
+        function initializeNetworkDiagram() {
+            const container = document.getElementById('network-diagram');
+            
+            new p5((p) => {
+                let nodes = [];
+                let connections = [];
+                let selectedNode = null;
+                let transactionInProgress = false;
+                
+                p.setup = function() {
+                    const canvas = p.createCanvas(container.offsetWidth, 500);
+                    canvas.parent(container);
+                    
+                    // Create nodes
+                    nodes = [
+                        { x: 100, y: 100, type: 'client', label: 'Client App', color: '#1e3a8a', size: 30 },
+                        { x: 300, y: 80, type: 'peer', label: 'org1hospital1', color: '#0d9488', size: 40 },
+                        { x: 300, y: 200, type: 'peer', label: 'Peer Node 2', color: '#0d9488', size: 35 },
+                        { x: 500, y: 140, type: 'orderer', label: 'ordererNode', color: '#f59e0b', size: 35 },
+                        { x: 700, y: 140, type: 'ledger', label: 'Ledger', color: '#10b981', size: 40 }
+                    ];
+                    
+                    // Create connections
+                    connections = [
+                        { from: 0, to: 1 },
+                        { from: 0, to: 2 },
+                        { from: 1, to: 3 },
+                        { from: 2, to: 3 },
+                        { from: 3, to: 4 }
+                    ];
+                };
+                
+                p.draw = function() {
+                    p.background(248, 250, 252);
+                    
+                    // Draw connections
+                    p.stroke(200);
+                    p.strokeWeight(2);
+                    connections.forEach(conn => {
+                        const from = nodes[conn.from];
+                        const to = nodes[conn.to];
+                        p.line(from.x, from.y, to.x, to.y);
+                    });
+                    
+                    // Draw nodes
+                    nodes.forEach((node, index) => {
+                        // Node circle
+                        p.fill(node.color);
+                        p.noStroke();
+                        p.ellipse(node.x, node.y, node.size);
+                        
+                        // Node label
+                        p.fill(255);
+                        p.textAlign(p.CENTER, p.CENTER);
+                        p.textSize(10);
+                        p.text(node.label, node.x, node.y);
+                        
+                        // Selection indicator
+                        if (selectedNode === index) {
+                            p.stroke(255, 255, 0);
+                            p.strokeWeight(3);
+                            p.noFill();
+                            p.ellipse(node.x, node.y, node.size + 10);
+                        }
+                    });
+                    
+                    // Transaction animation
+                    if (transactionInProgress) {
+                        animateTransaction();
+                    }
+                };
+                
+                p.mousePressed = function() {
+                    // Check if clicked on a node
+                    nodes.forEach((node, index) => {
+                        const distance = p.dist(p.mouseX, p.mouseY, node.x, node.y);
+                        if (distance < node.size / 2) {
+                            selectedNode = index;
+                            showNodeDetails(node);
+                        }
+                    });
+                };
+                
+                function animateTransaction() {
+                    // Simple transaction flow animation
+                    p.stroke(255, 255, 0);
+                    p.strokeWeight(4);
+                    p.line(nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y);
+                    
+                    setTimeout(() => {
+                        p.stroke(255, 255, 0);
+                        p.line(nodes[1].x, nodes[1].y, nodes[3].x, nodes[3].y);
+                    }, 500);
+                    
+                    setTimeout(() => {
+                        p.stroke(255, 255, 0);
+                        p.line(nodes[3].x, nodes[3].y, nodes[4].x, nodes[4].y);
+                        transactionInProgress = false;
+                    }, 1000);
+                }
+                
+                p.windowResized = function() {
+                    p.resizeCanvas(container.offsetWidth, 500);
+                };
+            });
+        }
+
+        function showNodeDetails(node) {
+            // Create tooltip or info panel
+            console.log('Selected node:', node);
+        }
+
+        function initializeArchitectureLayers() {
+            const layers = document.querySelectorAll('.architecture-layer');
+            const detailsPanel = document.getElementById('architecture-details');
+            const layerTitle = document.getElementById('layer-title');
+            const layerDescription = document.getElementById('layer-description');
+            
+            const layerInfo = {
+                application: {
+                    title: 'Application Layer',
+                    description: 'The application layer provides the user interface and API endpoints for interacting with the blockchain network. It includes web applications, mobile apps, and integration interfaces for existing healthcare systems. This layer handles user authentication, request formatting, and response presentation.'
+                },
+                'smart-contract': {
+                    title: 'Smart Contract Layer',
+                    description: 'Smart contracts (chaincode) contain the business logic for medical record management. They define rules for patient registration, record validation, access control, and data privacy. The chaincode ensures that all transactions follow established healthcare protocols and regulatory requirements.'
+                },
+                transaction: {
+                    title: 'Transaction Layer',
+                    description: 'The transaction layer manages the lifecycle of blockchain transactions. It handles endorsement from multiple peers, ordering of transactions into blocks, and validation before commitment to the ledger. This layer ensures consistency and integrity across the distributed network.'
+                },
+                ledger: {
+                    title: 'Distributed Ledger',
+                    description: 'The distributed ledger provides immutable storage for all medical records and transactions. It maintains a complete audit trail of all data access and modifications. The ledger is replicated across all peer nodes, ensuring data availability and preventing single points of failure.'
+                },
+                network: {
+                    title: 'Network Layer',
+                    description: 'The network layer manages communication between peer nodes, orderers, and client applications. It handles peer discovery, message routing, and consensus protocols. This layer ensures secure and reliable communication across the distributed healthcare network.'
+                }
+            };
+            
+            layers.forEach(layer => {
+                layer.addEventListener('click', () => {
+                    const layerType = layer.dataset.layer;
+                    const info = layerInfo[layerType];
+                    
+                    layerTitle.textContent = info.title;
+                    layerDescription.textContent = info.description;
+                    detailsPanel.classList.remove('hidden');
+                    
+                    // Animate panel appearance
+                    anime({
+                        targets: detailsPanel,
+                        opacity: [0, 1],
+                        translateY: [20, 0],
+                        duration: 300,
+                        easing: 'easeOutCubic'
+                    });
+                });
+            });
+        }
+
+        // Transaction simulation
+        document.getElementById('simulate-transaction').addEventListener('click', function() {
+            this.disabled = true;
+            this.textContent = 'Simulating...';
+            
+            // Trigger transaction animation
+            setTimeout(() => {
+                this.disabled = false;
+                this.textContent = 'Simulate Transaction';
+            }, 3000);
+        });
+
+        document.getElementById('reset-diagram').addEventListener('click', function() {
+            location.reload();
+        });
+
+        function initializeScrollEffects() {
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            revealElements.forEach(element => {
+                revealObserver.observe(element);
+            });
+        }
+    </script>
+</body>
+</html>

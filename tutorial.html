@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Tutorial - Hyperledger Fabric Medical Blockchain</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .code { font-family: 'JetBrains Mono', monospace; }
+        .text-gradient { background: linear-gradient(135deg, #1e3a8a, #0d9488); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: linear-gradient(135deg, #1e3a8a, #0d9488); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(30, 58, 138, 0.3); }
+        .form-input { transition: all 0.3s ease; }
+        .form-input:focus { border-color: #0d9488; box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
+        .step-indicator { transition: all 0.3s ease; }
+        .step-indicator.active { background: linear-gradient(135deg, #1e3a8a, #0d9488); color: white; }
+        .api-endpoint { background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-left: 4px solid #0d9488; }
+        .loading { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .reveal { opacity: 0; transform: translateY(30px); }
+        .reveal.active { opacity: 1; transform: translateY(0); transition: all 0.6s ease; }
+        .success-response { border-left: 4px solid #10b981; background: linear-gradient(135deg, #f0fdf4, #dcfce7); }
+        .error-response { border-left: 4px solid #ef4444; background: linear-gradient(135deg, #fef2f2, #fee2e2); }
+        .live-indicator { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .blockchain-animation { background: linear-gradient(45deg, #1e3a8a, #0d9488, #10b981); background-size: 400% 400%; animation: gradient 3s ease infinite; }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <img src="resources/tech-titans-logo.png" alt="Tech Titans Logo" class="h-10 w-10">
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-900">Tech Titans</h1>
+                        <p class="text-xs text-gray-600">Live API Tutorial</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
+                    <a href="architecture.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Architecture</a>
+                    <a href="research.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Research</a>
+                    <a href="tutorial.html" class="text-blue-600 font-medium">Live Tutorial</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="pt-24 pb-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center reveal">
+                <h1 class="text-4xl md:text-5xl font-bold text-gradient mb-6">Live API Tutorial</h1>
+                <p class="text-xl text-gray-600 max-w-4xl mx-auto">
+                    Interact with the real Hyperledger Fabric network using live API endpoints. 
+                    Register patients, add medical records, and query blockchain data in real-time.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Network Status -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 reveal">
+                <h2 class="text-3xl font-bold mb-8">Live Network Status</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-4 h-4 bg-green-500 rounded-full live-indicator"></div>
+                                <div>
+                                    <h3 class="font-bold">org1hospital1</h3>
+                                    <p class="text-sm text-gray-600">Peer Node - AWS: ap-southeast-2</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-green-600 font-medium">Active</p>
+                                <p class="text-xs text-gray-500">Node ID: a0w8nsa04l</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-4 h-4 bg-green-500 rounded-full live-indicator"></div>
+                                <div>
+                                    <h3 class="font-bold">ordererNode</h3>
+                                    <p class="text-sm text-gray-600">Orderer Node - AWS: ap-southeast-2</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-green-600 font-medium">Active</p>
+                                <p class="text-xs text-gray-500">Node ID: a0oiss3ozm</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold">Connection Details</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Base URL:</span>
+                                <span class="font-bold text-sm">https://a0jpqq5zam-a0w8nsa04l-connect.au0-aws-ws.kaleido.io</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Channel:</span>
+                                <span class="font-bold">default-channel</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Chaincode:</span>
+                                <span class="font-bold">health_record_storage</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Auth Type:</span>
+                                <span class="font-bold">Basic Auth</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tutorial Steps -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-center mb-12 reveal">
+                <div class="flex space-x-4">
+                    <div class="step-indicator active w-12 h-12 rounded-full flex items-center justify-center font-bold border-2 border-gray-300" data-step="1">1</div>
+                    <div class="step-indicator w-12 h-12 rounded-full flex items-center justify-center font-bold border-2 border-gray-300" data-step="2">2</div>
+                    <div class="step-indicator w-12 h-12 rounded-full flex items-center justify-center font-bold border-2 border-gray-300" data-step="3">3</div>
+                    <div class="step-indicator w-12 h-12 rounded-full flex items-center justify-center font-bold border-2 border-gray-300" data-step="4">4</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Authentication -->
+            <div id="step-1" class="tutorial-step mb-16 reveal">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">Step 1: Authentication</h2>
+                    <p class="text-gray-600 mb-8">First, let's authenticate with the Hyperledger Fabric network using your credentials.</p>
+                    
+                    <div class="api-endpoint p-6 rounded-lg mb-6">
+                        <h3 class="font-bold mb-2">API Endpoint</h3>
+                        <code class="code text-sm">POST /identities/{username}/enroll</code>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Try It Yourself</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Username</label>
+                                    <input type="text" id="auth-username" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="doctor2" placeholder="Enter username">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Secret</label>
+                                    <input type="password" id="auth-secret" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="rwLgviqwVyCZ" placeholder="Enter secret">
+                                </div>
+                                <button id="auth-btn" class="btn-primary w-full py-3 text-white font-semibold rounded-lg">
+                                    Authenticate
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Code Example</h3>
+                            <pre class="code bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto"><code>curl -X POST https://a0jpqq5zam-a0w8nsa04l-connect.au0-aws-ws.kaleido.io/identities/doctor2/enroll \
+  -H "Authorization: Basic YTB0c2s4bGNycjpBY3hzQklENFVHSl9FMGhNclIycmRKczJjUS0xMmV6c0Nyb05kQkphNVR3" \
+  -H "Content-Type: application/json" \
+  -d '{"secret":"rwLgviqwVyCZ"}'</code></pre>
+                        </div>
+                    </div>
+
+                    <div id="auth-response" class="mt-8 hidden">
+                        <h3 class="text-xl font-bold mb-4">Response</h3>
+                        <pre class="code bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto"><code id="auth-response-content"></code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Register Patient -->
+            <div id="step-2" class="tutorial-step mb-16 reveal">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">Step 2: Register Patient</h2>
+                    <p class="text-gray-600 mb-8">Register a new patient in the healthcare blockchain network.</p>
+                    
+                    <div class="api-endpoint p-6 rounded-lg mb-6">
+                        <h3 class="font-bold mb-2">API Endpoint</h3>
+                        <code class="code text-sm">POST /transactions?fly-sync=true</code>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Patient Information</h3>
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Patient ID</label>
+                                        <input type="text" id="patient-id" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="P002" placeholder="PXXX">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Name</label>
+                                        <input type="text" id="patient-name" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="Bob Jones" placeholder="Full Name">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">ID Number</label>
+                                        <input type="text" id="patient-idnum" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="B87654321" placeholder="ID Number">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Age</label>
+                                        <input type="number" id="patient-age" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="45" placeholder="Age">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Address</label>
+                                    <input type="text" id="patient-address" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="42 Medical St, Melbourne" placeholder="Address">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Hospital</label>
+                                    <input type="text" id="patient-hospital" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="Royal Melbourne" placeholder="Hospital Name">
+                                </div>
+                                <button id="register-btn" class="btn-primary w-full py-3 text-white font-semibold rounded-lg">
+                                    Register Patient
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Transaction Details</h3>
+                            <pre class="code bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto"><code>{
+  "headers": {
+    "type": "SendTransaction",
+    "signer": "doctor1",
+    "channel": "default-channel",
+    "chaincode": "health_record_storage"
+  },
+  "func": "RegisterPatient",
+  "args": ["P002", "Bob Jones", "B87654321", 
+           "42 Medical St, Melbourne", "Royal Melbourne", "45", "doctor1"],
+  "init": false
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div id="register-response" class="mt-8 hidden">
+                        <h3 class="text-xl font-bold mb-4">Blockchain Response</h3>
+                        <div id="register-response-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Add Medical Record -->
+            <div id="step-3" class="tutorial-step mb-16 reveal">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">Step 3: Add Medical Record</h2>
+                    <p class="text-gray-600 mb-8">Add a medical record for the registered patient.</p>
+                    
+                    <div class="api-endpoint p-6 rounded-lg mb-6">
+                        <h3 class="font-bold mb-2">API Endpoint</h3>
+                        <code class="code text-sm">POST /transactions?fly-sync=true</code>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Medical Record</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Patient ID</label>
+                                    <input type="text" id="record-patient-id" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="P002" placeholder="Patient ID">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Record Type</label>
+                                        <select id="record-type" class="form-input w-full p-3 border border-gray-300 rounded-lg">
+                                            <option value="Weight">Weight</option>
+                                            <option value="BloodPressure" selected>Blood Pressure</option>
+                                            <option value="Temperature">Temperature</option>
+                                            <option value="HeartRate">Heart Rate</option>
+                                            <option value="Height">Height</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Value</label>
+                                        <input type="text" id="record-value" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="120/80 mmHg" placeholder="Record Value">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Doctor</label>
+                                    <input type="text" id="record-doctor" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="doctor1" placeholder="Doctor ID">
+                                </div>
+                                <button id="add-record-btn" class="btn-primary w-full py-3 text-white font-semibold rounded-lg">
+                                    Add Medical Record
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Transaction Details</h3>
+                            <pre class="code bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto"><code>{
+  "headers": {
+    "type": "SendTransaction",
+    "signer": "doctor1",
+    "channel": "default-channel",
+    "chaincode": "health_record_storage"
+  },
+  "func": "AddRecord",
+  "args": ["P002", "BloodPressure", "120/80 mmHg", "doctor1"],
+  "init": false
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div id="add-record-response" class="mt-8 hidden">
+                        <h3 class="text-xl font-bold mb-4">Blockchain Response</h3>
+                        <div id="add-record-response-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Query Records -->
+            <div id="step-4" class="tutorial-step mb-16 reveal">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">Step 4: Query Patient Records</h2>
+                    <p class="text-gray-600 mb-8">Retrieve medical records from the blockchain ledger.</p>
+                    
+                    <div class="api-endpoint p-6 rounded-lg mb-6">
+                        <h3 class="font-bold mb-2">API Endpoint</h3>
+                        <code class="code text-sm">POST /query</code>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Query Options</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Patient ID</label>
+                                    <input type="text" id="query-patient-id" class="form-input w-full p-3 border border-gray-300 rounded-lg" value="P002" placeholder="Patient ID">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Record Type (Optional)</label>
+                                    <select id="query-record-type" class="form-input w-full p-3 border border-gray-300 rounded-lg">
+                                        <option value="">All Records</option>
+                                        <option value="Weight">Weight</option>
+                                        <option value="BloodPressure" selected>Blood Pressure</option>
+                                        <option value="Temperature">Temperature</option>
+                                        <option value="HeartRate">Heart Rate</option>
+                                        <option value="Height">Height</option>
+                                    </select>
+                                </div>
+                                <div class="flex space-x-4">
+                                    <button id="query-specific-btn" class="btn-primary flex-1 py-3 text-white font-semibold rounded-lg">
+                                        Query Specific Record
+                                    </button>
+                                    <button id="query-all-btn" class="bg-teal-600 hover:bg-teal-700 flex-1 py-3 text-white font-semibold rounded-lg transition-colors">
+                                        Query All Records
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Query Examples</h3>
+                            <div class="space-y-4">
+                                <pre class="code bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto"><code>// Get specific record
+{
+  "headers": {
+    "type": "SendTransaction",
+    "signer": "doctor1",
+    "channel": "default-channel",
+    "chaincode": "health_record_storage"
+  },
+  "func": "GetRecord",
+  "args": ["P002", "BloodPressure"],
+  "init": false
+}</code></pre>
+                                <pre class="code bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto"><code>// Get all records
+{
+  "headers": {
+    "type": "SendTransaction",
+    "signer": "doctor1",
+    "channel": "default-channel",
+    "chaincode": "health_record_storage"
+  },
+  "func": "GetAllRecords",
+  "args": ["P002"],
+  "init": false
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="query-response" class="mt-8 hidden">
+                        <h3 class="text-xl font-bold mb-4">Query Results</h3>
+                        <div id="query-response-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tutorial Summary -->
+            <div class="bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-2xl p-8 reveal">
+                <h2 class="text-3xl font-bold mb-6">Tutorial Complete!</h2>
+                <p class="text-xl mb-8">You've successfully interacted with the real Hyperledger Fabric blockchain network. You've learned how to:</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">✓</div>
+                            <span>Authenticate with the live network</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">✓</div>
+                            <span>Register real patients on blockchain</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">✓</div>
+                            <span>Add medical records to ledger</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">✓</div>
+                            <span>Query real blockchain data</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <a href="research.html" class="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        Continue to Research Analysis
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-3 mb-6">
+                    <img src="resources/tech-titans-logo.png" alt="Tech Titans Logo" class="h-12 w-12 opacity-80">
+                    <div>
+                        <h3 class="text-xl font-bold">Tech Titans Group 21</h3>
+                        <p class="text-gray-400 text-sm">Hyperledger Fabric Medical Blockchain Research</p>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800 pt-6">
+                    <p class="text-gray-400">
+                        © 2025 Tech Titans Group 21. Department of Information and Communication Technology, 
+                        Faculty of Technology, Rajarata University of Sri Lanka.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Live API Tutorial functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTutorial();
+            initializeScrollEffects();
+        });
+
+        // API Configuration
+        const API_CONFIG = {
+            baseUrl: 'https://a0jpqq5zam-a0w8nsa04l-connect.au0-aws-ws.kaleido.io',
+            auth: 'Basic YTB0c2s4bGNycjpBY3hzQklENFVHSl9FMGhNclIycmRKczJjUS0xMmV6c0Nyb05kQkphNVR3',
+            channel: 'default-channel',
+            chaincode: 'health_record_storage'
+        };
+
+        function initializeTutorial() {
+            // Authentication
+            document.getElementById('auth-btn').addEventListener('click', function() {
+                const username = document.getElementById('auth-username').value;
+                const secret = document.getElementById('auth-secret').value;
+                authenticateUser(username, secret);
+            });
+
+            // Patient Registration
+            document.getElementById('register-btn').addEventListener('click', function() {
+                const patientData = {
+                    id: document.getElementById('patient-id').value,
+                    name: document.getElementById('patient-name').value,
+                    idNum: document.getElementById('patient-idnum').value,
+                    age: document.getElementById('patient-age').value,
+                    address: document.getElementById('patient-address').value,
+                    hospital: document.getElementById('patient-hospital').value
+                };
+                registerPatient(patientData);
+            });
+
+            // Add Medical Record
+            document.getElementById('add-record-btn').addEventListener('click', function() {
+                const recordData = {
+                    patientId: document.getElementById('record-patient-id').value,
+                    type: document.getElementById('record-type').value,
+                    value: document.getElementById('record-value').value,
+                    doctor: document.getElementById('record-doctor').value
+                };
+                addMedicalRecord(recordData);
+            });
+
+            // Query Records
+            document.getElementById('query-specific-btn').addEventListener('click', function() {
+                const queryData = {
+                    patientId: document.getElementById('query-patient-id').value,
+                    recordType: document.getElementById('query-record-type').value
+                };
+                querySpecificRecord(queryData);
+            });
+
+            document.getElementById('query-all-btn').addEventListener('click', function() {
+                const patientId = document.getElementById('query-patient-id').value;
+                queryAllRecords(patientId);
+            });
+        }
+
+        async function authenticateUser(username, secret) {
+            showLoading('auth-btn');
+            
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/identities/${username}/enroll`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': API_CONFIG.auth,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ secret: secret })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displaySuccessResponse('auth-response', 'auth-response-content', data);
+                    hideLoading('auth-btn', 'Authenticated ✓');
+                    updateStepIndicator(2);
+                } else {
+                    displayErrorResponse('auth-response', 'auth-response-content', data);
+                    hideLoading('auth-btn', 'Authentication Failed');
+                }
+            } catch (error) {
+                displayErrorResponse('auth-response', 'auth-response-content', { error: error.message });
+                hideLoading('auth-btn', 'Connection Error');
+            }
+        }
+
+        async function registerPatient(patientData) {
+            showLoading('register-btn');
+            
+            const transactionData = {
+                headers: {
+                    type: "SendTransaction",
+                    signer: "doctor1",
+                    channel: API_CONFIG.channel,
+                    chaincode: API_CONFIG.chaincode
+                },
+                func: "RegisterPatient",
+                args: [
+                    patientData.id,
+                    patientData.name,
+                    patientData.idNum,
+                    patientData.address,
+                    patientData.hospital,
+                    patientData.age.toString(),
+                    "doctor1"
+                ],
+                init: false
+            };
+
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/transactions?fly-sync=true`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': API_CONFIG.auth,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(transactionData)
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displaySuccessResponse('register-response', 'register-response-content', data);
+                    hideLoading('register-btn', 'Patient Registered ✓');
+                    updateStepIndicator(3);
+                } else {
+                    displayErrorResponse('register-response', 'register-response-content', data);
+                    hideLoading('register-btn', 'Registration Failed');
+                }
+            } catch (error) {
+                displayErrorResponse('register-response', 'register-response-content', { error: error.message });
+                hideLoading('register-btn', 'Connection Error');
+            }
+        }
+
+        async function addMedicalRecord(recordData) {
+            showLoading('add-record-btn');
+            
+            const transactionData = {
+                headers: {
+                    type: "SendTransaction",
+                    signer: "doctor1",
+                    channel: API_CONFIG.channel,
+                    chaincode: API_CONFIG.chaincode
+                },
+                func: "AddRecord",
+                args: [
+                    recordData.patientId,
+                    recordData.type,
+                    recordData.value,
+                    recordData.doctor
+                ],
+                init: false
+            };
+
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/transactions?fly-sync=true`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': API_CONFIG.auth,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(transactionData)
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displaySuccessResponse('add-record-response', 'add-record-response-content', data);
+                    hideLoading('add-record-btn', 'Record Added ✓');
+                    updateStepIndicator(4);
+                } else {
+                    displayErrorResponse('add-record-response', 'add-record-response-content', data);
+                    hideLoading('add-record-btn', 'Add Record Failed');
+                }
+            } catch (error) {
+                displayErrorResponse('add-record-response', 'add-record-response-content', { error: error.message });
+                hideLoading('add-record-btn', 'Connection Error');
+            }
+        }
+
+        async function querySpecificRecord(queryData) {
+            showLoading('query-specific-btn');
+            
+            const queryRequest = {
+                headers: {
+                    type: "SendTransaction",
+                    signer: "doctor1",
+                    channel: API_CONFIG.channel,
+                    chaincode: API_CONFIG.chaincode
+                },
+                func: "GetRecord",
+                args: [queryData.patientId, queryData.recordType],
+                init: false
+            };
+
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': API_CONFIG.auth,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(queryRequest)
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displaySuccessResponse('query-response', 'query-response-content', data);
+                    hideLoading('query-specific-btn', 'Queried ✓');
+                } else {
+                    displayErrorResponse('query-response', 'query-response-content', data);
+                    hideLoading('query-specific-btn', 'Query Failed');
+                }
+            } catch (error) {
+                displayErrorResponse('query-response', 'query-response-content', { error: error.message });
+                hideLoading('query-specific-btn', 'Connection Error');
+            }
+        }
+
+        async function queryAllRecords(patientId) {
+            showLoading('query-all-btn');
+            
+            const queryRequest = {
+                headers: {
+                    type: "SendTransaction",
+                    signer: "doctor1",
+                    channel: API_CONFIG.channel,
+                    chaincode: API_CONFIG.chaincode
+                },
+                func: "GetAllRecords",
+                args: [patientId],
+                init: false
+            };
+
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': API_CONFIG.auth,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(queryRequest)
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displaySuccessResponse('query-response', 'query-response-content', data);
+                    hideLoading('query-all-btn', 'Queried All ✓');
+                } else {
+                    displayErrorResponse('query-response', 'query-response-content', data);
+                    hideLoading('query-all-btn', 'Query Failed');
+                }
+            } catch (error) {
+                displayErrorResponse('query-response', 'query-response-content', { error: error.message });
+                hideLoading('query-all-btn', 'Connection Error');
+            }
+        }
+
+        function showLoading(buttonId) {
+            const button = document.getElementById(buttonId);
+            button.innerHTML = '<div class="loading w-5 h-5 border-2 border-white border-t-transparent rounded-full mx-auto"></div>';
+            button.disabled = true;
+        }
+
+        function hideLoading(buttonId, text) {
+            const button = document.getElementById(buttonId);
+            button.innerHTML = text;
+            button.disabled = false;
+        }
+
+        function displaySuccessResponse(responseContainerId, contentId, response) {
+            const container = document.getElementById(responseContainerId);
+            const content = document.getElementById(contentId);
+            
+            content.innerHTML = `
+                <div class="success-response p-4 rounded-lg mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span class="font-bold text-green-700">Success</span>
+                    </div>
+                    <pre class="code text-sm text-gray-800">${JSON.stringify(response, null, 2)}</pre>
+                </div>
+            `;
+            
+            container.classList.remove('hidden');
+            
+            // Animate the response display
+            anime({
+                targets: container,
+                scale: [0.95, 1],
+                opacity: [0.7, 1],
+                duration: 500,
+                easing: 'easeOutCubic'
+            });
+        }
+
+        function displayErrorResponse(responseContainerId, contentId, response) {
+            const container = document.getElementById(responseContainerId);
+            const content = document.getElementById(contentId);
+            
+            content.innerHTML = `
+                <div class="error-response p-4 rounded-lg mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <span class="font-bold text-red-700">Error</span>
+                    </div>
+                    <pre class="code text-sm text-gray-800">${JSON.stringify(response, null, 2)}</pre>
+                </div>
+            `;
+            
+            container.classList.remove('hidden');
+            
+            // Animate the response display
+            anime({
+                targets: container,
+                scale: [0.95, 1],
+                opacity: [0.7, 1],
+                duration: 500,
+                easing: 'easeOutCubic'
+            });
+        }
+
+        function updateStepIndicator(step) {
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                if (index < step) {
+                    indicator.classList.add('active');
+                }
+            });
+        }
+
+        function initializeScrollEffects() {
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            revealElements.forEach(element => {
+                revealObserver.observe(element);
+            });
+        }
+    </script>
+</body>
+</html>

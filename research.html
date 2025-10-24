@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Analysis - Hyperledger Fabric Medical Blockchain</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .code { font-family: 'JetBrains Mono', monospace; }
+        .text-gradient { background: linear-gradient(135deg, #1e3a8a, #0d9488); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: linear-gradient(135deg, #1e3a8a, #0d9488); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(30, 58, 138, 0.3); }
+        .comparison-card { transition: all 0.3s ease; }
+        .comparison-card:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .reveal { opacity: 0; transform: translateY(30px); }
+        .reveal.active { opacity: 1; transform: translateY(0); transition: all 0.6s ease; }
+        .metric-bar { transition: width 1s ease-in-out; }
+        .filter-btn { transition: all 0.3s ease; }
+        .filter-btn.active { background: linear-gradient(135deg, #1e3a8a, #0d9488); color: white; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <img src="resources/tech-titans-logo.png" alt="Tech Titans Logo" class="h-10 w-10">
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-900">Tech Titans</h1>
+                        <p class="text-xs text-gray-600">Research Analysis</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
+                    <a href="architecture.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Architecture</a>
+                    <a href="research.html" class="text-blue-600 font-medium">Research</a>
+                    <a href="api-test.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Command Center</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="pt-24 pb-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center reveal">
+                <h1 class="text-4xl md:text-5xl font-bold text-gradient mb-6">Research Analysis</h1>
+                <p class="text-xl text-gray-600 max-w-4xl mx-auto">
+                    Comprehensive evaluation of blockchain technologies for secure medical data storage: 
+                    comparing Hyperledger Fabric, Ethereum, and Corda across multiple dimensions.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Methodology -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 reveal">
+                <h2 class="text-3xl font-bold mb-8">Research Methodology</h2>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Security Analysis</h3>
+                        <p class="text-sm text-gray-600">Cryptographic mechanisms, access control, and privacy protection</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Performance Testing</h3>
+                        <p class="text-sm text-gray-600">Transaction throughput, latency, and scalability assessment</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Use Case Validation</h3>
+                        <p class="text-sm text-gray-600">Healthcare scenario modeling and implementation feasibility</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Comparative Analysis</h3>
+                        <p class="text-sm text-gray-600">Multi-dimensional comparison and optimal solution recommendation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Comparison Tool -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 reveal">
+                <h2 class="text-3xl font-bold mb-8">Interactive Comparison Matrix</h2>
+                
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap gap-3 mb-8">
+                    <button class="filter-btn active px-4 py-2 rounded-lg border border-gray-300 font-medium" data-filter="all">
+                        All Criteria
+                    </button>
+                    <button class="filter-btn px-4 py-2 rounded-lg border border-gray-300 font-medium" data-filter="security">
+                        Security
+                    </button>
+                    <button class="filter-btn px-4 py-2 rounded-lg border border-gray-300 font-medium" data-filter="performance">
+                        Performance
+                    </button>
+                    <button class="filter-btn px-4 py-2 rounded-lg border border-gray-300 font-medium" data-filter="scalability">
+                        Scalability
+                    </button>
+                    <button class="filter-btn px-4 py-2 rounded-lg border border-gray-300 font-medium" data-filter="privacy">
+                        Privacy
+                    </button>
+                </div>
+
+                <!-- Comparison Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="text-left p-4 font-bold">Criteria</th>
+                                <th class="text-center p-4 font-bold text-blue-600">Hyperledger Fabric</th>
+                                <th class="text-center p-4 font-bold text-purple-600">Ethereum</th>
+                                <th class="text-center p-4 font-bold text-orange-600">Corda</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparison-table">
+                            <!-- Table content will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Metrics -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 reveal">
+                <h2 class="text-3xl font-bold mb-8">Performance Metrics</h2>
+                <p class="text-gray-600 mb-8">Quantitative analysis of blockchain platform performance for healthcare applications.</p>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="comparison-card bg-blue-50 p-6 rounded-xl">
+                        <h3 class="text-xl font-bold mb-4 text-blue-600">Hyperledger Fabric</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm">Transaction Throughput</span>
+                                    <span class="text-sm font-bold">3,500 TPS</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="metric-bar bg-blue-600 h-2 rounded-full" style="width: 0%" data-width="85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm">Latency</span>
+                                    <span class="text-sm font-bold">~2 seconds</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="metric-bar bg-blue-600 h-2 rounded-full" style="width: 0%" data-width="90%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm">Scalability</span>
+                                    <span class="text-sm font-bold">High</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="metric-bar bg-blue-600 h-2 rounded-full" style="width: 0%" data-width="88%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-card bg-purple-50 p-6 rounded-xl">
+                        <h3 class="text-xl font-bold mb-4 text-purple-600">Ethereum</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm">Transaction Throughput</span>
+                                    <span class="text-sm font-bold">15 TPS</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="metric-bar bg-purple-600 h-2 rounded-full" style="width: 0%" data-width="25%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm">Latency</span>
+                                    <span class="text-sm font-bold">~15 minutes</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="metric-bar bg-purple-600 h-2 rounded-full" style="width: 0%" data-width="30%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm">Scalability</span>
+                                    <span class="text-sm font-bold">Medium</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="metric-bar bg-purple-600 h-2 rounded-full" style="width: 0%" data-width="60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-card bg-orange-50 p-6 rounded-xl">
+                        <h3 class="text-xl font-bold mb-4 text-orange-600">Corda</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm">Transaction Throughput</span>
+                                    <span class="text-sm font-bold">1,700 TPS</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="metric-bar bg-orange-600 h-2 rounded-full" style="width: 0%" data-width="70%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm">Latency</span>
+                                    <span class="text-sm font-bold">~5 seconds</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="metric-bar bg-orange-600 h-2 rounded-full" style="width: 0%" data-width="75%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm">Scalability</span>
+                                    <span class="text-sm font-bold">Medium</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="metric-bar bg-orange-600 h-2 rounded-full" style="width: 0%" data-width="65%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Analysis Charts -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-12 reveal">
+                <h2 class="text-3xl font-bold mb-8">Detailed Analysis</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Security Comparison</h3>
+                        <div id="security-chart" style="height: 300px;"></div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Use Case Suitability</h3>
+                        <div id="usecase-chart" style="height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusions and Recommendations -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-2xl p-8 reveal">
+                <h2 class="text-3xl font-bold mb-8">Conclusions & Recommendations</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Key Findings</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mt-0.5">1</div>
+                                <p>Hyperledger Fabric demonstrates superior performance for enterprise healthcare applications</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mt-0.5">2</div>
+                                <p>Privacy and access control mechanisms align with healthcare regulatory requirements</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mt-0.5">3</div>
+                                <p>Scalability features support multi-institution healthcare networks</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Recommendations</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mt-0.5">✓</div>
+                                <p>Implement Hyperledger Fabric for production healthcare blockchain systems</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mt-0.5">✓</div>
+                                <p>Develop comprehensive privacy-preserving mechanisms</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mt-0.5">✓</div>
+                                <p>Establish cross-institutional governance frameworks</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <a href="tutorial.html" class="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        Try the Interactive Tutorial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-3 mb-6">
+                    <img src="resources/tech-titans-logo.png" alt="Tech Titans Logo" class="h-12 w-12 opacity-80">
+                    <div>
+                        <h3 class="text-xl font-bold">Tech Titans Group 21</h3>
+                        <p class="text-gray-400 text-sm">Hyperledger Fabric Medical Blockchain Research</p>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800 pt-6">
+                    <p class="text-gray-400">
+                        © 2025 Tech Titans Group 21. Department of Information and Communication Technology, 
+                        Faculty of Technology, Rajarata University of Sri Lanka.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Research page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeComparisonTable();
+            initializeFilterButtons();
+            initializeCharts();
+            initializeScrollEffects();
+            animateMetricBars();
+        });
+
+        const comparisonData = {
+            security: [
+                {
+                    criteria: 'Data Encryption',
+                    hyperledger: { score: 9, text: 'AES-256, TLS 1.3' },
+                    ethereum: { score: 7, text: 'Standard encryption' },
+                    corda: { score: 8, text: 'AES-256, TLS' }
+                },
+                {
+                    criteria: 'Access Control',
+                    hyperledger: { score: 10, text: 'Fine-grained ACL' },
+                    ethereum: { score: 6, text: 'Public/Private keys' },
+                    corda: { score: 9, text: 'Role-based access' }
+                },
+                {
+                    criteria: 'Privacy Protection',
+                    hyperledger: { score: 10, text: 'Private channels' },
+                    ethereum: { score: 4, text: 'Public ledger' },
+                    corda: { score: 9, text: 'Point-to-point' }
+                },
+                {
+                    criteria: 'Audit Trail',
+                    hyperledger: { score: 10, text: 'Immutable records' },
+                    ethereum: { score: 8, text: 'Transaction history' },
+                    corda: { score: 9, text: 'Complete provenance' }
+                }
+            ],
+            performance: [
+                {
+                    criteria: 'Transaction Speed',
+                    hyperledger: { score: 9, text: '3,500 TPS' },
+                    ethereum: { score: 3, text: '15 TPS' },
+                    corda: { score: 7, text: '1,700 TPS' }
+                },
+                {
+                    criteria: 'Latency',
+                    hyperledger: { score: 9, text: '~2 seconds' },
+                    ethereum: { score: 4, text: '~15 minutes' },
+                    corda: { score: 7, text: '~5 seconds' }
+                },
+                {
+                    criteria: 'Network Efficiency',
+                    hyperledger: { score: 8, text: 'High efficiency' },
+                    ethereum: { score: 5, text: 'Proof of Work' },
+                    corda: { score: 8, text: 'Point-to-point' }
+                },
+                {
+                    criteria: 'Resource Usage',
+                    hyperledger: { score: 8, text: 'Moderate' },
+                    ethereum: { score: 4, text: 'High (PoW)' },
+                    corda: { score: 9, text: 'Low' }
+                }
+            ],
+            scalability: [
+                {
+                    criteria: 'Horizontal Scaling',
+                    hyperledger: { score: 9, text: 'Excellent' },
+                    ethereum: { score: 6, text: 'Limited' },
+                    corda: { score: 7, text: 'Good' }
+                },
+                {
+                    criteria: 'Network Size',
+                    hyperledger: { score: 10, text: 'Enterprise scale' },
+                    ethereum: { score: 8, text: 'Global network' },
+                    corda: { score: 7, text: 'Business networks' }
+                },
+                {
+                    criteria: 'Partition Tolerance',
+                    hyperledger: { score: 9, text: 'High' },
+                    ethereum: { score: 8, text: 'Good' },
+                    corda: { score: 8, text: 'Good' }
+                },
+                {
+                    criteria: 'Consensus Efficiency',
+                    hyperledger: { score: 9, text: 'Raft/PBFT' },
+                    ethereum: { score: 5, text: 'PoW/PoS' },
+                    corda: { score: 8, text: 'Notary clusters' }
+                }
+            ],
+            privacy: [
+                {
+                    criteria: 'Data Confidentiality',
+                    hyperledger: { score: 10, text: 'Private channels' },
+                    ethereum: { score: 4, text: 'Public data' },
+                    corda: { score: 9, text: 'Need-to-know' }
+                },
+                {
+                    criteria: 'Identity Management',
+                    hyperledger: { score: 9, text: 'PKI-based' },
+                    ethereum: { score: 6, text: 'Address-based' },
+                    corda: { score: 8, text: 'Legal identity' }
+                },
+                {
+                    criteria: 'Selective Disclosure',
+                    hyperledger: { score: 10, text: 'Full control' },
+                    ethereum: { score: 3, text: 'Limited' },
+                    corda: { score: 9, text: 'Granular control' }
+                },
+                {
+                    criteria: 'Regulatory Compliance',
+                    hyperledger: { score: 10, text: 'HIPAA/GDPR ready' },
+                    ethereum: { score: 5, text: 'Challenging' },
+                    corda: { score: 9, text: 'Regulatory friendly' }
+                }
+            ]
+        };
+
+        function initializeComparisonTable() {
+            const tableBody = document.getElementById('comparison-table');
+            
+            function createTableRows(data) {
+                return data.map(item => `
+                    <tr class="border-b border-gray-200">
+                        <td class="p-4 font-medium">${item.criteria}</td>
+                        <td class="p-4 text-center">
+                            <div class="flex items-center justify-center space-x-2">
+                                <span class="font-bold">${item.hyperledger.score}/10</span>
+                                <div class="text-sm text-gray-600">${item.hyperledger.text}</div>
+                            </div>
+                        </td>
+                        <td class="p-4 text-center">
+                            <div class="flex items-center justify-center space-x-2">
+                                <span class="font-bold">${item.ethereum.score}/10</span>
+                                <div class="text-sm text-gray-600">${item.ethereum.text}</div>
+                            </div>
+                        </td>
+                        <td class="p-4 text-center">
+                            <div class="flex items-center justify-center space-x-2">
+                                <span class="font-bold">${item.corda.score}/10</span>
+                                <div class="text-sm text-gray-600">${item.corda.text}</div>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Initialize with all data
+            let allData = [...comparisonData.security, ...comparisonData.performance, ...comparisonData.scalability, ...comparisonData.privacy];
+            tableBody.innerHTML = createTableRows(allData);
+        }
+
+        function initializeFilterButtons() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const tableBody = document.getElementById('comparison-table');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Filter data
+                    const filter = button.dataset.filter;
+                    let data;
+                    
+                    if (filter === 'all') {
+                        data = [...comparisonData.security, ...comparisonData.performance, ...comparisonData.scalability, ...comparisonData.privacy];
+                    } else {
+                        data = comparisonData[filter];
+                    }
+                    
+                    // Update table
+                    tableBody.innerHTML = data.map(item => `
+                        <tr class="border-b border-gray-200">
+                            <td class="p-4 font-medium">${item.criteria}</td>
+                            <td class="p-4 text-center">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <span class="font-bold text-blue-600">${item.hyperledger.score}/10</span>
+                                    <div class="text-sm text-gray-600">${item.hyperledger.text}</div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-center">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <span class="font-bold text-purple-600">${item.ethereum.score}/10</span>
+                                    <div class="text-sm text-gray-600">${item.ethereum.text}</div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-center">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <span class="font-bold text-orange-600">${item.corda.score}/10</span>
+                                    <div class="text-sm text-gray-600">${item.corda.text}</div>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                });
+            });
+        }
+
+        function initializeCharts() {
+            // Security Comparison Chart
+            const securityChart = echarts.init(document.getElementById('security-chart'));
+            const securityOption = {
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['Hyperledger Fabric', 'Ethereum', 'Corda'] },
+                radar: {
+                    indicator: [
+                        { name: 'Encryption', max: 10 },
+                        { name: 'Access Control', max: 10 },
+                        { name: 'Privacy', max: 10 },
+                        { name: 'Audit Trail', max: 10 },
+                        { name: 'Compliance', max: 10 }
+                    ]
+                },
+                series: [{
+                    name: 'Security Comparison',
+                    type: 'radar',
+                    data: [
+                        { value: [9, 10, 10, 10, 10], name: 'Hyperledger Fabric', itemStyle: { color: '#1e3a8a' } },
+                        { value: [7, 6, 4, 8, 5], name: 'Ethereum', itemStyle: { color: '#8b5cf6' } },
+                        { value: [8, 9, 9, 9, 9], name: 'Corda', itemStyle: { color: '#f59e0b' } }
+                    ]
+                }]
+            };
+            securityChart.setOption(securityOption);
+
+            // Use Case Suitability Chart
+            const usecaseChart = echarts.init(document.getElementById('usecase-chart'));
+            const usecaseOption = {
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['Hyperledger Fabric', 'Ethereum', 'Corda'] },
+                xAxis: {
+                    type: 'category',
+                    data: ['Healthcare', 'Finance', 'Supply Chain', 'Identity', 'Voting']
+                },
+                yAxis: { type: 'value', max: 10 },
+                series: [
+                    {
+                        name: 'Hyperledger Fabric',
+                        type: 'bar',
+                        data: [10, 9, 9, 9, 8],
+                        itemStyle: { color: '#1e3a8a' }
+                    },
+                    {
+                        name: 'Ethereum',
+                        type: 'bar',
+                        data: [5, 8, 7, 7, 9],
+                        itemStyle: { color: '#8b5cf6' }
+                    },
+                    {
+                        name: 'Corda',
+                        type: 'bar',
+                        data: [8, 10, 7, 8, 6],
+                        itemStyle: { color: '#f59e0b' }
+                    }
+                ]
+            };
+            usecaseChart.setOption(usecaseOption);
+
+            // Make charts responsive
+            window.addEventListener('resize', () => {
+                securityChart.resize();
+                usecaseChart.resize();
+            });
+        }
+
+        function animateMetricBars() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bars = entry.target.querySelectorAll('.metric-bar');
+                        bars.forEach(bar => {
+                            const width = bar.dataset.width;
+                            setTimeout(() => {
+                                bar.style.width = width;
+                            }, 200);
+                        });
+                    }
+                });
+            });
+
+            document.querySelectorAll('.comparison-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        function initializeScrollEffects() {
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            revealElements.forEach(element => {
+                revealObserver.observe(element);
+            });
+        }
+    </script>
+</body>
+</html>
