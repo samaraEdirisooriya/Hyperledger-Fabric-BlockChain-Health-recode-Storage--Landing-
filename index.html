@@ -365,7 +365,7 @@
         // API Configuration
         const API_CONFIG = {
             baseUrl: 'https://a0jpqq5zam-a0w8nsa04l-connect.au0-aws-ws.kaleido.io',
-            auth: 'Basic YTbLexN2OEdpMWE2eDZNZUpCOXNSdUk3U3phaEoyQ3ZmelB3MVlZSGEzbTFQd1MtLVg1TU9hUQ==',
+            auth: 'Basic YTB5eGE3b2kxYTp4Nk1lSkI5c1J1STNTemFoSjJDdmZ6UHcxWVlIQTNtMVB3Uy0tWDVNT2FR',
             channel: 'default-channel',
             chaincode: 'health_record_storage'
         };
@@ -498,7 +498,37 @@
             const button = document.getElementById('execute-api');
             
             showLoading(button);
-            addTerminalMessage('Executing API call...', 'yellow');
+            addTerminalMessage('🔍 Performing network health check...', 'yellow');
+
+            // Critical: Verify peer connectivity before transaction
+            try {
+                const healthCheck = await fetch(`${API_CONFIG.baseUrl}/identities/doctor1`, {
+                    method: 'GET',
+                    headers: { 'Authorization': API_CONFIG.auth }
+                });
+                
+                if (!healthCheck.ok) {
+                    addTerminalMessage('❌ CRITICAL: Peer node is unreachable!', 'red');
+                    addTerminalMessage('💡 ACTION REQUIRED:', 'yellow');
+                    addTerminalMessage('   1. Log into Kaleido Console', 'yellow');
+                    addTerminalMessage('   2. Navigate to Nodes → org1hospital1', 'yellow');
+                    addTerminalMessage('   3. Click "Start" if stopped', 'yellow');
+                    addTerminalMessage('   4. Wait 2-3 minutes and retry', 'yellow');
+                    hideLoading(button, 'Execute API Call');
+                    return;
+                }
+                
+                const identity = await healthCheck.json();
+                addTerminalMessage(`✅ Identity check passed: ${identity.name} (${identity.msp_id})`, 'green');
+            } catch (error) {
+                addTerminalMessage('❌ NETWORK ERROR: Cannot connect to Kaleido endpoint', 'red');
+                addTerminalMessage(`💡 Details: ${error.message}`, 'yellow');
+                addTerminalMessage('🔧 Possible causes: Node offline, network outage, or CORS issue', 'yellow');
+                hideLoading(button, 'Execute API Call');
+                return;
+            }
+
+            addTerminalMessage('✅ Network health confirmed, executing transaction...', 'green');
 
             try {
                 let response;
@@ -528,13 +558,20 @@
                     addTerminalMessage('Response: ' + JSON.stringify(data, null, 2), 'white');
                     hideLoading(button, 'Execute API Call ✓');
                 } else {
-                    addTerminalMessage('❌ API Call Failed!', 'red');
-                    addTerminalMessage('Error: ' + JSON.stringify(data, null, 2), 'red');
+                    // Parse Kaleido error messages
+                    if (data.error && data.error.includes("CONNECTION_FAILED")) {
+                        addTerminalMessage('❌ PEER CONNECTION FAILURE', 'red');
+                        addTerminalMessage('💡 The blockchain peer node cannot be reached', 'yellow');
+                    } else if (data.error && data.error.includes("ENDORSEMENT_FAILED")) {
+                        addTerminalMessage('❌ TRANSACTION ENDORSEMENT FAILED', 'red');
+                        addTerminalMessage('💡 Chaincode error or insufficient endorsements', 'yellow');
+                    } else {
+                        addTerminalMessage('❌ API Call Failed: ' + data.error, 'red');
+                    }
                     hideLoading(button, 'Execute API Call');
                 }
             } catch (error) {
-                addTerminalMessage('❌ Connection Error!', 'red');
-                addTerminalMessage('Error: ' + error.message, 'red');
+                addTerminalMessage('❌ Connection Error: ' + error.message, 'red');
                 hideLoading(button, 'Execute API Call');
             }
         }
@@ -665,25 +702,35 @@
             });
         }
 
-        function testConnection() {
-            addTerminalMessage('Testing connection to blockchain network...', 'yellow');
+        async function testConnection() {
+            addTerminalMessage('🌡️ Performing comprehensive network diagnostics...', 'yellow');
             
-            fetch(`${API_CONFIG.baseUrl}/identities/doctor1`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': API_CONFIG.auth
-                }
-            })
-            .then(response => {
+            // Test API Gateway
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/identities/doctor1`, {
+                    method: 'GET',
+                    headers: { 'Authorization': API_CONFIG.auth }
+                });
+                
                 if (response.ok) {
-                    addTerminalMessage('✅ Network connection successful!', 'green');
+                    const data = await response.json();
+                    addTerminalMessage('✅ API Gateway: ONLINE', 'green');
+                    addTerminalMessage(`👤 Identity: ${data.name} (${data.msp_id})`, 'white');
+                    addTerminalMessage(`🏥 Organization: ${data.msp_id}`, 'white');
                 } else {
-                    addTerminalMessage('❌ Network connection failed!', 'red');
+                    addTerminalMessage('❌ API Gateway: AUTH FAILED', 'red');
                 }
-            })
-            .catch(error => {
-                addTerminalMessage('❌ Network connection error: ' + error.message, 'red');
-            });
+            } catch (error) {
+                addTerminalMessage('❌ API Gateway: CONNECTION FAILED', 'red');
+                addTerminalMessage(`💡 Error: ${error.message}`, 'yellow');
+                addTerminalMessage('🔧 ACTION: Check Kaleido console → Nodes → org1hospital1', 'yellow');
+                addTerminalMessage('   Ensure node status is "Running" (not "Stopped" or "Error")', 'yellow');
+            }
+            
+            // Test Explorer Connectivity
+            addTerminalMessage('🌐 Blockchain Explorer (credentials embedded):', 'teal');
+            addTerminalMessage('   https://a0yxa7oi1a:... @a0jpqq5zam-a0w8nsa04l-explorer.au0-aws-ws.kaleido.io', 'white');
+            addTerminalMessage('   Click "View Explorer" button to open', 'white');
         }
 
         function openExplorer() {
@@ -691,7 +738,6 @@
         }
 
         function refreshStats() {
-            // Simulate refreshing stats
             const blocksElement = document.getElementById('total-blocks');
             const transactionsElement = document.getElementById('total-transactions');
             
@@ -731,7 +777,6 @@
         }
 
         function startNetworkAnimation() {
-            // Animate network status indicators
             setInterval(() => {
                 const indicators = document.querySelectorAll('.pulse-dot');
                 indicators.forEach(indicator => {
